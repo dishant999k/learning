@@ -1,0 +1,39 @@
+.auth {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+}
+.auth__card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+  padding: 32px;
+}
+.auth__brand {
+  display: flex; align-items: center; gap: 10px;
+  justify-content: center; margin-bottom: 24px;
+  font-weight: 700; font-size: 16px;
+}
+.auth__brand-icon {
+  width: 36px; height: 36px; background: var(--primary);
+  border-radius: 8px; display: grid; place-items: center; color: #fff;
+}
+.auth__title { text-align: center; margin-bottom: 6px; }
+.auth__subtitle { text-align: center; margin-bottom: 24px; color: var(--text-2); }
+.auth__footer { text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-2); }
+.auth__divider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 20px 0; color: var(--text-3); font-size: 12px;
+}
+.auth__divider::before, .auth__divider::after {
+  content: ""; flex: 1; height: 1px; background: var(--border);
+}
+.checkbox-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; font-size: 13px; }
+.checkbox-row label { display: flex; align-items: center; gap: 8px; color: var(--text-2); cursor: pointer; }
+.password-strength { height: 4px; background: var(--surface-2); border-radius: 999px; margin-top: 6px; overflow: hidden; }
+.password-strength__bar { height: 100%; width: 40%; background: var(--warning); border-radius: 999px; transition: width 0.2s; }

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Locations · HomeStock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .loc-card { padding: 20px; }
+  .loc-card__icon { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; background: var(--primary-soft); margin-bottom: 12px; }
+  .loc-card__name { font-weight: 600; font-size: 15px; }
+  .loc-card__count { color: var(--text-3); font-size: 13px; margin-top: 2px; }
+  .loc-card__bar { height: 6px; background: var(--surface-2); border-radius: 999px; margin-top: 12px; overflow: hidden; }
+  .loc-card__bar span { display: block; height: 100%; background: var(--primary); }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__brand"><span class="sidebar__brand-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>HomeStock</div>
+    <nav class="sidebar__nav">
+      <div class="sidebar__section">Overview</div><a href="dashboard.html" class="sidebar__link">Dashboard</a>
+      <div class="sidebar__section">Manage</div>
+      <a href="inventory.html" class="sidebar__link">Inventory</a><a href="categories.html" class="sidebar__link">Categories</a>
+      <a href="locations.html" class="sidebar__link is-active">Locations</a><a href="stock.html" class="sidebar__link">Stock</a>
+      <div class="sidebar__section">Alerts</div>
+      <a href="expiry.html" class="sidebar__link">Expiry</a><a href="warranty.html" class="sidebar__link">Warranty</a><a href="notifications.html" class="sidebar__link">Notifications</a>
+      <div class="sidebar__section">Insights</div><a href="reports.html" class="sidebar__link">Reports</a>
+      <div class="sidebar__section">Account</div><a href="profile.html" class="sidebar__link">Profile</a><a href="login.html" class="sidebar__link">Sign out</a>
+    </nav>
+    <div class="sidebar__footer"><div class="avatar">SR</div><div><div class="sidebar__user-name">Sara Ahmed</div><div class="sidebar__user-email">sara@home.com</div></div></div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button title="topbar__menu" class="topbar__menu" data-action="toggle-sidebar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <div class="topbar__search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="search" placeholder="Search by location..."></div>
+      <div class="topbar__actions"><button title="topbar__actions" class="icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span class="icon-btn__dot"></span></button><div class="avatar">SR</div></div>
+    </header>
+    <main class="content">
+      <div class="page-header">
+        <div class="page-header__title"><h1>Locations</h1><p>Where each item is stored in your home</p></div>
+        <button class="btn btn--primary" data-action="open-modal" data-modal="add-location-modal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New location</button>
+      </div>
+      <div class="grid grid--3" id="locations-grid">
+        <a href="inventory.html" class="card loc-card" data-location-id="1"><div class="loc-card__icon">🍳</div><div class="loc-card__name">Kitchen</div><div class="loc-card__count">98 items · 6 categories</div><div class="loc-card__bar"><span style="width: 78%;"></span></div></a>
+        <a href="inventory.html" class="card loc-card" data-location-id="2"><div class="loc-card__icon">🛏️</div><div class="loc-card__name">Bedroom</div><div class="loc-card__count">32 items · 4 categories</div><div class="loc-card__bar"><span style="width: 45%;"></span></div></a>
+        <a href="inventory.html" class="card loc-card" data-location-id="3"><div class="loc-card__icon">🛋️</div><div class="loc-card__name">Living Room</div><div class="loc-card__count">28 items · 3 categories</div><div class="loc-card__bar"><span style="width: 38%;"></span></div></a>
+        <a href="inventory.html" class="card loc-card" data-location-id="4"><div class="loc-card__icon">🚿</div><div class="loc-card__name">Bathroom</div><div class="loc-card__count">24 items · 3 categories</div><div class="loc-card__bar"><span style="width: 32%;"></span></div></a>
+        <a href="inventory.html" class="card loc-card" data-location-id="5"><div class="loc-card__icon">🖥️</div><div class="loc-card__name">Office</div><div class="loc-card__count">18 items · 3 categories</div><div class="loc-card__bar"><span style="width: 24%;"></span></div></a>
+        <a href="inventory.html" class="card loc-card" data-location-id="6"><div class="loc-card__icon">🚗</div><div class="loc-card__name">Garage</div><div class="loc-card__count">22 items · 4 categories</div><div class="loc-card__bar"><span style="width: 28%;"></span></div></a>
+        <a href="inventory.html" class="card loc-card" data-location-id="7"><div class="loc-card__icon">📦</div><div class="loc-card__name">Store Room</div><div class="loc-card__count">26 items · 5 categories</div><div class="loc-card__bar"><span style="width: 35%;"></span></div></a>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="modal-backdrop" id="add-location-modal" data-modal-root>
+  <div class="modal">
+    <div class="modal__header"><h2>New location</h2><button class="modal__close" data-modal-close>✕</button></div>
+    <form id="add-location-form">
+      <div class="modal__body">
+        <div class="field"><label for="loc-name">Location name</label><input class="input" id="loc-name" name="name" placeholder="e.g. Kitchen" required></div>
+        <div class="field"><label for="loc-icon">Icon (emoji)</label><input class="input" id="loc-icon" name="icon" placeholder="🍳" maxlength="2"></div>
+      </div>
+      <div class="modal__footer"><button type="button" class="btn btn--ghost" data-modal-close>Cancel</button><button type="submit" class="btn btn--primary">Save location</button></div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

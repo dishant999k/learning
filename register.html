@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create account · HomeStock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<div class="auth">
+  <div class="auth__card">
+    <div class="auth__brand">
+      <span class="auth__brand-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </span>
+      HomeStock
+    </div>
+    <h1 class="auth__title">Create your account</h1>
+    <p class="auth__subtitle">Start tracking your household items in minutes</p>
+    <form id="register-form" novalidate>
+      <div class="field-row">
+        <div class="field">
+          <label for="first-name">First name</label>
+          <input class="input" type="text" id="first-name" name="firstName" required>
+        </div>
+        <div class="field">
+          <label for="last-name">Last name</label>
+          <input class="input" type="text" id="last-name" name="lastName" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="email">Email address</label>
+        <input class="input" type="email" id="email" name="email" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input class="input" type="password" id="password" name="password" minlength="8" required>
+        <div class="password-strength"><div class="password-strength__bar" data-strength-bar></div></div>
+        <div class="field__hint">At least 8 characters, including a number.</div>
+      </div>
+      <div class="field">
+        <label for="confirm">Confirm password</label>
+        <input class="input" type="password" id="confirm" name="confirmPassword" required>
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">Create account</button>
+    </form>
+    <p class="auth__footer">Already have an account? <a href="login.html">Sign in</a></p>
+  </div>
+</div>
+<script src="javascript/register.js"></script>
+</body>
+</html>
