@@ -1,5 +1,8 @@
 const form = document.querySelector("#register-form");
 
+if (!form) {
+    console.warn("Register form not found on this page.");
+} else {
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -45,3 +48,4 @@ form.addEventListener("submit", async (e) => {
         alert("Server Error");
     }
 });
+}

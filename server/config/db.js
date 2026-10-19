@@ -6,13 +6,13 @@ const connectDB = async () => {
         await mongoose.connect(process.env.MONGO_URI);
 
         console.log("✅ MongoDB Atlas Connected");
+        return true;
 
     } catch (error) {
 
         console.log("❌ MongoDB Connection Failed");
         console.log(error.message);
-
-        process.exit(1);
+        return false;
     }
 };
 

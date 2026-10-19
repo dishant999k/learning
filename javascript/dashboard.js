@@ -1,79 +1,52 @@
+const token = localStorage.getItem("token");
 
-// const sidebar__footer = document.querySelector(".sidebar__footer");
-// sidebar__footer.addEventListener("click",()=>{
-//     window.location.href="profile.html";
-// });
+if (!token) {
+    window.location.href = "login.html";
+} else {
+    const userNameEls = document.querySelectorAll(".sidebar__user-name");
+    const userEmailEls = document.querySelectorAll(".sidebar__user-email");
 
-// const form = document.querySelector("#profile-form");
-// form.addEventListener("submit",function(dets){
-//     dets.preventDefault();
-//     // console.log(dets);
-//    const first = document.querySelector("#first");
-//    const last = document.querySelector("#last");
-//    const email = document.querySelector("#email");
-//    const phone = document.querySelector("#phone");
-//     //  first.textContent = ip[0].value;
-//     //  first.textContent = ip[1].value;
-//     //  first.textContent = ip[2].value;
-//     //  first.textContent = ip[3].value;
-//     const profile = {
-//         firstName: first.value,
-//         lastName: last.value,
-//         email: email.value,
-//         phone: phone.value     
-//     };
-//     if(first.value && last.value && email.value && phone.value){
-//         alert("save personal information");
-//     }
-//     console.log(first.value);
-//            let avatarName = document.querySelector(".avatarName");
-//               avatarName.textContent=first.value+" "+last.value;
-//            let adminEmail = document.querySelector(".text-muted");
-//               adminEmail.textContent = email.value;
-//                 const avatasidebarAvatar = document.querySelector("#sidebarAvatar");
-//                 sidebarAvatar.textContent = first.value.charAt(0).toUpperCase() + last.value.charAt(0).toUpperCase();
+    async function loadUserProfile() {
+        try {
+            const response = await fetch("http://localhost:5000/api/auth/profile", {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
 
-//     localStorage.setItem("profile",JSON.stringify(profile));
-// });
+            const data = await response.json();
 
-// //password change
-// const form2 = document.querySelector("#password-form");
-// form2.addEventListener("submit", function(e) {
-//     e.preventDefault();
-//     const curr = document.querySelector("#current");
-//     const curr_new = document.querySelector("#new-pw");
-//     const confirm = document.querySelector("#confirm-pw");
+            if (!response.ok) {
+                localStorage.removeItem("token");
+                window.location.href = "login.html";
+                return;
+            }
 
-//     const confirmation = {
-//         currentPassword: curr.value,
-//         newPassword: curr_new.value,
-//         confirmPassword: confirm.value
-//     };
+            const user = data.user || {};
+            const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
 
-//     if (confirm.value !== curr_new.value) {
-//         alert("Passwords do not match!");
-//         return;
-//     }
-//     if (curr.value === "dishant@123") {
-//         alert("Password matched!");
-//         localStorage.setItem("password", JSON.stringify(confirmation));
-//     } else {
-//         alert("Current password is incorrect!");
-//     }
-// });
+            userNameEls.forEach((element) => {
+                element.textContent = fullName || "User";
+            });
 
+            userEmailEls.forEach((element) => {
+                element.textContent = user.email || "";
+            });
+        } catch (error) {
+            console.error("Failed to load dashboard profile:", error);
+        }
+    }
 
+    document.querySelectorAll('[data-action="logout"]').forEach((button) => {
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        });
+    });
 
-// const emoji = document.querySelector(".table__thumb");
-// const table__item_name = document.querySelector(".table__item-name");
-// const table__item_sub = document.querySelector(".table__item-sub");
-
-
-//   document.querySelector("tbody")
-
-
-         
-
-
+    loadUserProfile();
+}
 
 

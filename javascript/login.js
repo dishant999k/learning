@@ -1,5 +1,8 @@
 const form = document.querySelector("#login-form");
 
+if (!form) {
+    console.warn("Login form not found on this page.");
+} else {
 form.addEventListener("submit", async (e) => {
 
     e.preventDefault();
@@ -50,3 +53,4 @@ const response = await fetch(
     }
 
 });
+}
