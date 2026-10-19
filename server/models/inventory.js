@@ -20,11 +20,13 @@ const inventorySchema = new mongoose.Schema({
     quantity: {
         type: Number,
         required: true,
-        default: 0
+        default: 0,
+        min: 0
     },
     minimumStock: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0
     },
     location: {
         type: String,

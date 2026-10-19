@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 
 const register = async (req, res) => {
@@ -25,8 +25,7 @@ const register = async (req, res) => {
         });
 
         res.status(201).json({
-            message: "Registration Successful",
-            user
+            message: "Registration Successful"
         });
 
     } catch (error) {

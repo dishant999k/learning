@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const User = require("../models/User");
+const User = require("../models/user");
 const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
@@ -23,7 +23,12 @@ router.post("/register", async (req, res) => {
             password
         } = req.body;
 
-        const existingUser = await User.findOne({ email });
+        const normalizedEmail = String(email || "").trim().toLowerCase();
+        if (!firstName?.trim() || !lastName?.trim() || !/^\S+@\S+\.\S+$/.test(normalizedEmail) || typeof password !== "string" || password.length < 8 || !/\d/.test(password)) {
+            return res.status(400).json({ message: "Enter your name, a valid email, and a password of at least 8 characters including a number" });
+        }
+
+        const existingUser = await User.findOne({ email: normalizedEmail });
 
         if (existingUser) {
             return res.status(400).json({
@@ -36,7 +41,7 @@ router.post("/register", async (req, res) => {
         const user = new User({
             firstName,
             lastName,
-            email,
+            email: normalizedEmail,
             password: hashedPassword
         });
 
@@ -48,7 +53,9 @@ router.post("/register", async (req, res) => {
 
     } catch (error) {
 
-        console.log(error);
+        if (error.code === 11000) {
+            return res.status(409).json({ message: "Email already exists" });
+        }
 
         res.status(500).json({
             message: "Server Error"
@@ -68,11 +75,15 @@ router.post("/login", async (req, res) => {
 
         const { email, password } = req.body;
 
-        const user = await User.findOne({ email });
+        if (!email || typeof password !== "string") {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
+        const user = await User.findOne({ email: String(email).trim().toLowerCase() });
 
         if (!user) {
-            return res.status(404).json({
-                message: "User not found"
+            return res.status(401).json({
+                message: "Invalid email or password"
             });
         }
 
@@ -83,7 +94,7 @@ router.post("/login", async (req, res) => {
 
         if (!isMatch) {
             return res.status(401).json({
-                message: "Invalid Password"
+                message: "Invalid email or password"
             });
         }
 
@@ -99,12 +110,16 @@ router.post("/login", async (req, res) => {
 
         res.status(200).json({
             message: "Login Successful",
-            token
+            token,
+            user: {
+                id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email
+            }
         });
 
     } catch (error) {
-
-        console.log(error);
 
         res.status(500).json({
             message: "Server Error"

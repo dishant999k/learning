@@ -1,4 +1,5 @@
 const form = document.querySelector("#login-form");
+const API_BASE_URL = window.HOMESTOCK_API_URL || "http://localhost:5000/api";
 
 if (!form) {
     console.warn("Login form not found on this page.");
@@ -13,7 +14,7 @@ form.addEventListener("submit", async (e) => {
     try {
 
 const response = await fetch(
-    "http://localhost:5000/api/auth/login",
+    `${API_BASE_URL}/auth/login`,
     {
         method: "POST",
         headers: {
