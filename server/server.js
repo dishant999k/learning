@@ -13,14 +13,20 @@ const authRoutes = require("./routes/authRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
 const locationRoutes = require("./routes/locationRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/locations", locationRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/categories", categoryRoutes);
 
 app.get("/", (req, res) => {
-    res.send("Backend is Running...");
+    res.json({ name: "HomeStock API", status: "ok" });
+});
+
+app.get("/health", (req, res) => {
+    res.json({ status: "ok" });
 });
 
 const PORT = process.env.PORT || 5000;

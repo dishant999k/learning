@@ -101,28 +101,20 @@
     </div>
     <form id="add-item-form" novalidate>
       <div class="modal__body">
-        <div class="field">
-          <label>Photo</label>
-          <label class="file-drop" for="item-image">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            <div>Click to upload item photo</div>
-            <div class="field__hint">PNG, JPG up to 5MB</div>
-          </label>
-          <input type="file" id="item-image" name="image" accept="image/*" class="is-hidden">
-        </div>
         <div class="field"><label for="item-name">Item name</label><input class="input" id="item-name" name="name" placeholder="e.g. Whole Milk 1L" required></div>
         <div class="field-row">
-          <div class="field"><label for="item-category">Category</label><select class="select" id="item-category" name="categoryId" required><option value="">Select category</option><option>Groceries</option><option>Electronics</option><option>Furniture</option><option>Medicine</option><option>Cleaning</option><option>Toiletries</option></select></div>
-          <div class="field"><label for="item-location">Location</label><select class="select" id="item-location" name="locationId" required><option value="">Select location</option><option>Kitchen</option><option>Bedroom</option><option>Bathroom</option><option>Living Room</option><option>Office</option><option>Garage</option><option>Store Room</option></select></div>
+          <div class="field"><label for="item-category">Category</label><select class="select" id="item-category" name="category" required><option value="">Select category</option><option>Groceries</option><option>Electronics</option><option>Furniture</option><option>Medicine</option><option>Cleaning</option><option>Toiletries</option></select></div>
+          <div class="field"><label for="item-location">Location</label><select class="select" id="item-location" name="location" required><option value="">Select location</option><option>Kitchen</option><option>Bedroom</option><option>Bathroom</option><option>Living Room</option><option>Office</option><option>Garage</option><option>Store Room</option></select></div>
         </div>
         <div class="field-row">
           <div class="field"><label for="item-qty">Quantity</label><input class="input" type="number" id="item-qty" name="quantity" min="0" value="1" required></div>
-          <div class="field"><label for="item-min">Low-stock threshold</label><input class="input" type="number" id="item-min" name="lowStockThreshold" min="0" value="1"></div>
+          <div class="field"><label for="item-min">Low-stock threshold</label><input class="input" type="number" id="item-min" name="minimumStock" min="0" value="1"></div>
         </div>
         <div class="field-row">
+          <div class="field"><label for="item-purchase">Purchase date</label><input class="input" type="date" id="item-purchase" name="purchaseDate"></div>
           <div class="field"><label for="item-expiry">Expiry date</label><input class="input" type="date" id="item-expiry" name="expiryDate"></div>
-          <div class="field"><label for="item-warranty">Warranty until</label><input class="input" type="date" id="item-warranty" name="warrantyUntil"></div>
         </div>
+        <div class="field"><label for="item-warranty">Warranty until</label><input class="input" type="date" id="item-warranty" name="warrantyDate"></div>
         <div class="field"><label for="item-notes">Notes</label><textarea class="textarea" id="item-notes" name="notes" placeholder="Any additional details..."></textarea></div>
       </div>
       <div class="modal__footer">

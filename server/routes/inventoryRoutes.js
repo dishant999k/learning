@@ -26,8 +26,14 @@ router.post("/", authMiddleware, async (req, res) => {
             notes
         } = req.body;
 
-        if (!name || !category || !location) {
+        if (typeof name !== "string" || !name.trim()
+            || typeof category !== "string" || !category.trim()
+            || typeof location !== "string" || !location.trim()) {
             return res.status(400).json({ message: "Name, category, and location are required" });
+        }
+        if ((quantity !== undefined && (!Number.isInteger(Number(quantity)) || Number(quantity) < 0))
+            || (minimumStock !== undefined && (!Number.isInteger(Number(minimumStock)) || Number(minimumStock) < 0))) {
+            return res.status(400).json({ message: "Quantity and minimum stock must be non-negative whole numbers" });
         }
 
         const item = new Inventory({
@@ -51,8 +57,8 @@ router.post("/", authMiddleware, async (req, res) => {
         });
 
     } catch (error) {
-
-        res.status(500).json({
+        const status = ["ValidationError", "CastError"].includes(error.name) ? 400 : 500;
+        res.status(status).json({
             message: error.message || "Server Error"
         });
 
@@ -119,6 +125,13 @@ router.patch("/:id", authMiddleware, async (req, res) => {
 
         const allowedFields = ["name", "category", "quantity", "minimumStock", "location", "expiryDate", "purchaseDate", "warrantyDate", "notes"];
         const updates = Object.fromEntries(Object.entries(req.body).filter(([key]) => allowedFields.includes(key)));
+        if (!Object.keys(updates).length) {
+            return res.status(400).json({ message: "Provide at least one supported inventory field to update" });
+        }
+        if ((updates.quantity !== undefined && (!Number.isInteger(Number(updates.quantity)) || Number(updates.quantity) < 0))
+            || (updates.minimumStock !== undefined && (!Number.isInteger(Number(updates.minimumStock)) || Number(updates.minimumStock) < 0))) {
+            return res.status(400).json({ message: "Quantity and minimum stock must be non-negative whole numbers" });
+        }
         const item = await Inventory.findOneAndUpdate(
             { _id: req.params.id, user: req.user.id },
             { $set: updates },

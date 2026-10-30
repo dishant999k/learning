@@ -1,5 +1,5 @@
 const API_BASE_URL = window.HOMESTOCK_API_URL || "http://localhost:5000/api";
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 let currentUser = null;
 
 function escapeHtml(value) {
@@ -20,6 +20,7 @@ async function apiRequest(path, options = {}) {
     const data = await response.json().catch(() => ({}));
     if (response.status === 401) {
         localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         window.location.href = "login.html";
         throw new Error("Your session has expired. Please sign in again.");
     }
@@ -54,7 +55,12 @@ function itemStatus(item) {
 
 function formatDate(value) {
     if (!value) return "—";
-    const date = new Date(value);
+    const raw = String(value);
+    const dateOnly = /^\d{4}-\d{2}-\d{2}(?:T00:00:00(?:\.000)?Z)?$/.test(raw);
+    const [year, month, day] = raw.slice(0, 10).split("-").map(Number);
+    const date = dateOnly && year && month && day
+        ? new Date(year, month - 1, day)
+        : new Date(value);
     return Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString();
 }
 
@@ -130,11 +136,24 @@ async function loadLocations() {
 async function loadNotifications() {
     const list = document.querySelector("#notif-list");
     const { notifications } = await apiRequest("/notifications");
-    const readKey = `homestock-read-${currentUser.id}`;
+    const userId = currentUser.id || currentUser._id;
+    const readKey = `homestock-read-${userId}`;
+    let preferences = {};
     const readIds = new Set(JSON.parse(localStorage.getItem(readKey) || "[]"));
+    try {
+        preferences = JSON.parse(localStorage.getItem(`homestock-preferences-${userId}`) || "{}");
+    } catch (error) {
+        console.error("Could not read notification preferences", error);
+    }
     let activeType = "all";
     const render = () => {
-        const visible = notifications.filter((notification) => activeType === "all" || notification.type === activeType);
+        const enabled = {
+            stock: preferences.lowStockAlerts !== false,
+            expiry: preferences.expiryReminders !== false,
+            warranty: preferences.warrantyReminders !== false
+        };
+        const visible = notifications.filter((notification) => enabled[notification.type] !== false)
+            .filter((notification) => activeType === "all" || notification.type === activeType);
         list.innerHTML = visible.map((notification) => {
             const isRead = readIds.has(notification.id);
             const age = notification.createdAt ? new Date(notification.createdAt).toLocaleDateString() : "";
@@ -162,13 +181,17 @@ async function loadNotifications() {
 
 async function loadInventory() {
     const tbody = document.querySelector("#items-table tbody");
-    const { items } = await apiRequest("/inventory");
-    const { locations } = await apiRequest("/locations");
+    const [{ items }, { locations }, { categories: savedCategories }] = await Promise.all([
+        apiRequest("/inventory"),
+        apiRequest("/locations"),
+        apiRequest("/categories")
+    ]);
     const categorySelect = document.querySelector("#item-category");
     const locationSelect = document.querySelector("#item-location");
     const categoryFilter = document.querySelector('[data-filter="category"]');
     const locationFilter = document.querySelector('[data-filter="location"]');
     const categories = [...new Set([
+        ...savedCategories.map((category) => category.name),
         ...Array.from(categorySelect?.options || []).map((option) => option.value).filter(Boolean),
         ...items.map((item) => item.category)
     ])].sort();
@@ -213,6 +236,7 @@ async function loadInventory() {
                 location: document.querySelector("#item-location").value,
                 quantity: Number(document.querySelector("#item-qty").value),
                 minimumStock: Number(document.querySelector("#item-min").value),
+                purchaseDate: document.querySelector("#item-purchase").value || null,
                 expiryDate: document.querySelector("#item-expiry").value || null,
                 warrantyDate: document.querySelector("#item-warranty").value || null,
                 notes: document.querySelector("#item-notes").value.trim()
@@ -245,6 +269,7 @@ async function loadInventory() {
             document.querySelector("#item-location").value = item.location;
             document.querySelector("#item-qty").value = item.quantity;
             document.querySelector("#item-min").value = item.minimumStock;
+            document.querySelector("#item-purchase").value = item.purchaseDate ? item.purchaseDate.slice(0, 10) : "";
             document.querySelector("#item-expiry").value = item.expiryDate ? item.expiryDate.slice(0, 10) : "";
             document.querySelector("#item-warranty").value = item.warrantyDate ? item.warrantyDate.slice(0, 10) : "";
             document.querySelector("#item-notes").value = item.notes || "";
@@ -263,9 +288,10 @@ async function loadInventory() {
 
 function setupNavigation() {
     document.querySelector('[data-action="toggle-sidebar"]')?.addEventListener("click", () => document.querySelector("#sidebar")?.classList.toggle("is-open"));
-    document.querySelectorAll('[data-action="logout"]').forEach((link) => link.addEventListener("click", (event) => {
+    document.querySelectorAll('[data-action="logout"], .sidebar__link[href="login.html"]').forEach((link) => link.addEventListener("click", (event) => {
         event.preventDefault();
         localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         window.location.href = "login.html";
     }));
     document.querySelectorAll("[data-modal]").forEach((button) => button.addEventListener("click", () => document.querySelector(`#${button.dataset.modal}`)?.classList.add("is-open")));
@@ -276,6 +302,16 @@ async function initializeApp() {
     const page = document.body.dataset.page;
     if (page === "stock" || page === "inventory") {
         document.querySelectorAll("#stock-table tbody, #items-table tbody").forEach((tbody) => tbody.replaceChildren());
+    }
+    if (page === "stock") document.querySelectorAll(".stat__value").forEach((value) => { value.textContent = "—"; });
+    if (page === "dashboard") {
+        document.querySelector("#recent-items-table tbody")?.replaceChildren();
+        document.querySelectorAll(".mini-list").forEach((list) => { list.textContent = "Loading inventory…"; });
+        document.querySelectorAll("[data-stat]").forEach((value) => { value.textContent = "—"; });
+    }
+    if (page === "categories") document.querySelector("#categories-grid")?.replaceChildren();
+    if (page === "expiry" || page === "warranty") {
+        document.querySelectorAll(".stat__value").forEach((value) => { value.textContent = "—"; });
     }
     if (page === "locations") document.querySelector("#locations-grid")?.replaceChildren();
     if (page === "notifications") document.querySelector("#notif-list")?.replaceChildren();
@@ -292,6 +328,7 @@ async function initializeApp() {
         if (page === "locations") await loadLocations();
         if (page === "notifications") await loadNotifications();
         if (page === "inventory") await loadInventory();
+        if (typeof loadExtraPage === "function") await loadExtraPage(page);
     } catch (error) {
         if (error.message !== "Your session has expired. Please sign in again.") notify(error.message);
     }

@@ -34,7 +34,10 @@ const response = await fetch(
             alert(data.message);
 
             // Save JWT Token
-            localStorage.setItem("token", data.token);
+            localStorage.removeItem("token");
+            sessionStorage.removeItem("token");
+            const storage = document.querySelector('[name="remember"]')?.checked ? localStorage : sessionStorage;
+            storage.setItem("token", data.token);
 
             // Redirect
             window.location.href = "dashboard.html";
