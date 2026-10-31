@@ -1,5 +1,5 @@
 const form = document.querySelector("#register-form");
-const API_BASE_URL = window.HOMESTOCK_API_URL || "http://localhost:5000/api";
+const API_BASE_URL = window.HOMESTOCK_API_URL || "http://localhost:5001/api";
 
 if (!form) {
     console.warn("Register form not found on this page.");

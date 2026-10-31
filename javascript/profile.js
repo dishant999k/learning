@@ -1,4 +1,4 @@
-const PROFILE_API_URL = window.HOMESTOCK_API_URL || "http://localhost:5000/api";
+const PROFILE_API_URL = window.HOMESTOCK_API_URL || "http://localhost:5001/api";
 const profileToken = localStorage.getItem("token") || sessionStorage.getItem("token");
 
 async function profileRequest(path, options = {}) {

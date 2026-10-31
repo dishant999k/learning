@@ -1,19 +1,8 @@
 const mongoose = require("mongoose");
 
 const connectDB = async () => {
-    try {
-
-        await mongoose.connect(process.env.MONGO_URI);
-
-        console.log("✅ MongoDB Atlas Connected");
-        return true;
-
-    } catch (error) {
-
-        console.log("❌ MongoDB Connection Failed");
-        console.log(error.message);
-        return false;
-    }
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log(`MongoDB connected: ${mongoose.connection.name} on ${mongoose.connection.host}`);
 };
 
 module.exports = connectDB;

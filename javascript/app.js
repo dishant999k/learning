@@ -1,4 +1,4 @@
-const API_BASE_URL = window.HOMESTOCK_API_URL || "http://localhost:5000/api";
+const API_BASE_URL = window.HOMESTOCK_API_URL || "http://localhost:5001/api";
 const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 let currentUser = null;
 

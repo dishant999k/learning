@@ -2,8 +2,8 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const User = require("../models/user");
-const Inventory = require("../models/inventory");
+const User = require("../models/User");
+const Inventory = require("../models/Inventory");
 const Location = require("../models/Location");
 const Category = require("../models/Category");
 const authMiddleware = require("../middleware/authMiddleware");
